@@ -1,5 +1,5 @@
-
-import './App.css';
+import './styles/App.css';
+import Navigation from './pages/Navigation';
 
 function App() {
   return (
@@ -18,8 +18,14 @@ function App() {
           Visit 20Min
         </a>
       </header>
+      <body className="App-body">
+
+        <Navigation />
+
+      </body>
 
     </div>
+
   );
 }
 

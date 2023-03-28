@@ -5,7 +5,7 @@ function About() {
         <div className="About">
             <header className="App-header">
                 <p>
-                    About
+                    About routing worked
                 </p>
             </header>
 

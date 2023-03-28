@@ -1,32 +1,23 @@
 import './styles/App.css';
-import Navigation from './pages/Navigation';
+import Navigation from './components/Navigation';
+import Form from './pages/Form'
+
+
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
+        Test Startseite
 
-        <p>
-          Test Index Site
-        </p>
-        <a
-          className="App-link"
-          href="https://www.20min.ch/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Visit 20Min
-        </a>
+
       </header>
-      <body className="App-body">
-
-        <Navigation />
-
-      </body>
-
+      <Navigation />
+      <Form />
     </div>
 
   );
 }
 
 export default App;
+

@@ -1,23 +1,37 @@
 import './styles/App.css';
-import Navigation from './components/Navigation';
-import Form from './pages/Form'
-
+// import './styles/custom.scss';
+import Home from './pages/Home';
+import About from './pages/About';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import MainNavigation from './components/MainNavigation';
 
 
 function App() {
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home />
+
+    },
+    {
+      path: "/about",
+      element: <About />
+    }
+
+  ]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        Test Startseite
 
-
-      </header>
-      <Navigation />
-      <Form />
-    </div>
+    <>
+      {/* <MainNavigation /> */}
+      <RouterProvider router={router} />
+    </>
 
   );
 }
+
+
 
 export default App;
 

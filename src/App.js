@@ -2,8 +2,10 @@ import './styles/App.css';
 import './styles/custom.scss';
 import Home from './pages/Home';
 import About from './pages/About';
+import AdressForm from './pages/AdressForm';
+import Tagesmenu from './pages/Tagesmenu'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import MainNavigation from './components/MainNavigation';
+
 
 
 function App() {
@@ -17,6 +19,14 @@ function App() {
     {
       path: "/about",
       element: <About />
+    },
+    {
+      path: "/adressform",
+      element: <AdressForm />
+    },
+    {
+      path: "/tagesmenu",
+      element: <Tagesmenu />
     }
 
   ]);

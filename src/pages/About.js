@@ -1,14 +1,16 @@
 
+import MainNavigation from "../components/MainNavigation";
 
 function About() {
     return (
-        <div className="About">
-            <header className="App-header">
-                <p>
-                    About routing worked
-                </p>
-            </header>
+        <div>
+            <header>
+                <MainNavigation />
 
+            </header>
+            <p>
+                About routing worked
+            </p>
         </div>
 
     );

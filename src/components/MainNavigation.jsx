@@ -4,13 +4,15 @@ function MainNavigation() {
     return (
 
         <nav>
-            <ul className="nav">
-                <li className="nav-item">
-                    <a className="nav-link" href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
 
-            </ul>
-            <Link to="/about">About</Link>
+            <Link to="/"> Home</Link> |
+
+            <Link to="/about"> About</Link> |
+
+            <Link to="/adressform"> Adressformular</Link> |
+
+            <Link to="/tagesmenu"> Tagesmenü</Link>
+
         </nav>
     );
 }

@@ -4,10 +4,9 @@ function Home() {
     return (
         <div>
             <header>
+                <MainNavigation />
                 HomeScreen
             </header>
-
-            <MainNavigation />
         </div>
 
     )

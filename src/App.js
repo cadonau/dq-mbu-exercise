@@ -1,5 +1,5 @@
 import './styles/App.css';
-// import './styles/custom.scss';
+import './styles/custom.scss';
 import Home from './pages/Home';
 import About from './pages/About';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';

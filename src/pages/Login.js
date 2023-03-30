@@ -1,4 +1,5 @@
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function Login() {
 
@@ -6,6 +7,8 @@ export default function Login() {
     const [password, setPassword] = useState("");
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    const navigate = useNavigate();
 
     function handleUsernameChange(event) {
         setUsername(event.target.value);
@@ -38,6 +41,7 @@ export default function Login() {
                         // cf. https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
                         localStorage.setItem("auth", data?.authToken);
                         setErrorMessage("");
+                        navigate("/");
                     } else {
                         setErrorMessage(data.message);
                     }

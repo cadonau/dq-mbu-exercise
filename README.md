@@ -1,3 +1,18 @@
+# Exercise in Preparation for MBU's IPA
+
+## Development
+
+To use the 4D Test API add a `.env.development` file and include the following lines replacing `<url>` and `<credentials>`:
+
+    REACT_APP_API_URL=<url>
+    REACT_APP_API_AUTH_CREDENTIALS=<credentials>
+
+### Debugging
+
+To use a JetBrains IDE to debug, see: [Debugging React Apps Created With Create React App in WebStorm](https://blog.jetbrains.com/webstorm/2017/01/debugging-react-apps/)
+
+***
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

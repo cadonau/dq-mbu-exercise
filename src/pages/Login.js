@@ -18,36 +18,35 @@ export default function Login() {
         setPassword(event.target.value);
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         // cf. https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#uploading_json_data
-        // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
-        fetch(`${process.env.REACT_APP_API_URL}/authentication/login`, {
-            method: "POST",
-            headers: {
-                Authorization: `Basic ${process.env.REACT_APP_API_AUTH_CREDENTIALS}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username,
-                password
-            })
-        })
-            .then(r => r.json())
-            .then(
-                data => {
-                    console.log(data);
-                    if (data && data.authToken) {
-                        // cf. https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
-                        localStorage.setItem("auth", data?.authToken);
-                        setErrorMessage("");
-                        navigate("/");
-                    } else {
-                        setErrorMessage(data.message);
-                    }
-                }
-            )
-            .catch(error => console.error(error));
+        try {
+            // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/authentication/login`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Basic ${process.env.REACT_APP_API_AUTH_CREDENTIALS}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username,
+                    password
+                })
+            });
+            const data = await response.json();
+            console.log(data);
+            if (data && data.authToken) {
+                // cf. https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+                localStorage.setItem("auth", data?.authToken);
+                setErrorMessage("");
+                navigate("/");
+            } else {
+                setErrorMessage(data.message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (

@@ -1,7 +1,6 @@
-
+// import MenuFormFinal from "../components/MenuFormFinal";
 import MainNavigation from "../components/MainNavigation";
-import MenuForm from "../components/MenuForm";
-import MenuFormReact from "../components/MenuFormReact";
+import MenuFormUseState from "../components/MenuFormUseState";
 
 function Tagesmenu() {
 
@@ -30,10 +29,10 @@ function Tagesmenu() {
                     </tr>
                 </tbody>
             </table>
-
-            <MenuForm />
-            <br></br>
-            <MenuFormReact />
+            <hr />
+            <MenuFormUseState />
+            <hr />
+            {/* <MenuFormFinal /> */}
 
         </div>
 

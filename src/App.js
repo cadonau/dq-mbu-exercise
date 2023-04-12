@@ -5,6 +5,7 @@ import About from './pages/About';
 import AdressForm from './pages/AdressForm';
 import Tagesmenu from './pages/Tagesmenu'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import LunchMenu from "./pages/LunchMenu";
 
 
 
@@ -27,6 +28,10 @@ function App() {
     {
       path: "/tagesmenu",
       element: <Tagesmenu />
+    },
+    {
+      path: "/lunch-menu",
+      element: <LunchMenu />
     }
 
   ]);

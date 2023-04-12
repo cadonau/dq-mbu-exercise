@@ -13,6 +13,8 @@ function MainNavigation() {
 
             <Link to="/tagesmenu"> Tagesmenü</Link>
 
+            <Link to="/lunch-menu">Mittagsmenü</Link>
+
         </nav>
     );
 }

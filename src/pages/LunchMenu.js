@@ -1,6 +1,7 @@
 import MainNavigation from "../components/MainNavigation";
 import LunchItemForm from "../components/LunchItemForm";
 import {useState} from "react";
+import AverageLunchPrice from "../components/AverageLunchPrice";
 
 function LunchMenu() {
 
@@ -18,10 +19,13 @@ function LunchMenu() {
     ]);
 
     function addLunchItem(lunchItem) {
-        lunchItem.id = crypto.randomUUID();
         setLunchItems(prevState => ([
             ...prevState,
-            lunchItem
+            {
+                description: lunchItem.description,
+                price: Number.parseFloat(lunchItem.price),
+                id: crypto.randomUUID()
+            }
         ]));
     }
 
@@ -35,6 +39,8 @@ function LunchMenu() {
             </header>
             <h1>Aktuelle Angebote</h1>
 
+            {/* cf. https://react.dev/learn/passing-props-to-a-component#passing-props-to-a-component */}
+            <AverageLunchPrice lunchItems={lunchItems}/>
 
             <table className="table">
                 <caption>Alle Preisangaben in CHF</caption>

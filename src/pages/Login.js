@@ -42,10 +42,11 @@ export default function Login() {
                 setErrorMessage("");
                 navigate("/");
             } else {
-                setErrorMessage(data.message);
+                setErrorMessage("Fehler beim Login-Versuch: " + data.message);
             }
         } catch (error) {
             console.error(error);
+            setErrorMessage("Unerwarteter Fehler beim Login-Versuch.");
         }
     }
 

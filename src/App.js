@@ -1,10 +1,11 @@
 import './styles/App.css';
 import './styles/custom.scss';
 import Home from './pages/Home';
-import Tagesmenu from './pages/Tagesmenu'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Tagesmenu from './pages/Tagesmenu';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import LunchMenu from "./pages/LunchMenu";
 import Login from "./pages/Login";
+import RequireAuth from "./components/RequireAuth";
 
 function App() {
 
@@ -19,8 +20,13 @@ function App() {
       element: <Tagesmenu />
     },
     {
-      path: "/lunch-menu",
-      element: <LunchMenu />
+      element: <RequireAuth />,
+      children: [
+        {
+          path: "/lunch-menu",
+          element: <LunchMenu />
+        },
+      ]
     },
     {
       path: "/login",

@@ -2,7 +2,7 @@ import MainNavigation from "../components/MainNavigation";
 
 function Home() {
     return (
-        <div>
+        <div className="container">
             <header>
                 <MainNavigation />
                 HomeScreen

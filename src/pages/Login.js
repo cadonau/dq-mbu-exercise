@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 export default function Login() {
 
@@ -9,6 +9,13 @@ export default function Login() {
     const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
+
+    // Nice to have
+    // cf. https://github.com/remix-run/react-router/blob/dev/examples/auth/src/App.tsx#L150
+    // cf. https://github.com/remix-run/react-router/blob/dev/examples/auth/src/App.tsx#L139
+    // IMPORTANT: Example above does not use `createBrowserRouter` recommended in latest ReactRouter v6.4+
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
     function handleUsernameChange(event) {
         setUsername(event.target.value);
@@ -40,7 +47,7 @@ export default function Login() {
                 // cf. https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
                 localStorage.setItem("auth", data?.authToken);
                 setErrorMessage("");
-                navigate("/");
+                navigate(from, {replace: true});
             } else {
                 setErrorMessage("Fehler beim Login-Versuch: " + data.message);
             }

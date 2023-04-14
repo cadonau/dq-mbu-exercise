@@ -24,11 +24,16 @@ export default function LunchRegistration() {
     });
 
     useEffect(() => {
+
+        // see returned cleanup function below
+        const controller = new AbortController();
+
         // cf. https://ultimatecourses.com/blog/using-async-await-inside-react-use-effect-hook
         (async () => {
             try {
                 // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/pers?query="Inaktiv=false"&limit=0&attributes=PersNr,Name,Vorname,VornameName,NameVorname`, {
+                    signal: controller.signal,
                     headers: {
                         Authorization: `Bearer ${authToken}`
                     }
@@ -44,13 +49,23 @@ export default function LunchRegistration() {
                 console.log(responseObject);
                 setPersonOptions(responseObject.data);
             } catch (error) {
-                console.error(error);
-                setStatus({
-                    message: "Unerwarteter Fehler beim Laden der Personenliste.",
-                    type: "error"
-                });
+                if (error.name === "AbortError") {
+                    console.log("Fetch request successfully aborted.");
+                } else {
+                    console.error(error);
+                    setStatus({
+                        message: "Unerwarteter Fehler beim Laden der Personenliste.",
+                        type: "error"
+                    });
+                }
             }
         })();
+
+        // cf. https://react.dev/reference/react/useEffect
+        // cf. https://blog.logrocket.com/understanding-react-useeffect-cleanup-function/
+        return () => {
+            controller.abort();
+        };
 
     }, [authToken]);
 

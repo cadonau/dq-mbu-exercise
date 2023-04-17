@@ -1,10 +1,12 @@
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 
 export default function Login() {
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    // cf. https://react.dev/learn/referencing-values-with-refs
+    // cf. https://www.youtube.com/watch?v=GGo3MVBFr1A&t=39s
+    const usernameInputRef = useRef();
+    const passwordInputRef= useRef();
 
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -16,14 +18,6 @@ export default function Login() {
     // IMPORTANT: Example above does not use `createBrowserRouter` recommended in latest ReactRouter v6.4+
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
-
-    function handleUsernameChange(event) {
-        setUsername(event.target.value);
-    }
-
-    function handlePasswordChange(event) {
-        setPassword(event.target.value);
-    }
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -37,8 +31,8 @@ export default function Login() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    username,
-                    password
+                    username: usernameInputRef.current.value,
+                    password: passwordInputRef.current.value
                 })
             });
             const data = await response.json();
@@ -62,11 +56,12 @@ export default function Login() {
             {/*cf. https://getbootstrap.com/docs/5.2/forms/overview/*/}
             <form onSubmit={handleSubmit} className="container">
                 <label htmlFor="username" className="form-label">Username</label>
-                <input id="username" name="username" type="text" value={username} onChange={handleUsernameChange}
+                {/* cf. https://react.dev/learn/manipulating-the-dom-with-refs */}
+                <input id="username" name="username" type="text" ref={usernameInputRef}
                        required
                        className="form-control"/>
                 <label htmlFor="password" className="form-label">Password</label>
-                <input id="password" name="password" type="password" value={password} onChange={handlePasswordChange}
+                <input id="password" name="password" type="password" ref={passwordInputRef}
                        required
                        className="form-control"/>
                 <input type="submit" className="btn btn-primary"/>

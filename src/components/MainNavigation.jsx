@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function MainNavigation() {
     return (
@@ -13,6 +13,9 @@ function MainNavigation() {
                 </li>
                 <li>
                     <Link to="/lunch-menu" className="nav-link">Mittagsmenü</Link>
+                </li>
+                <li>
+                    <Link to="/lunch-registration" className="nav-link">Menü-Anmeldung</Link>
                 </li>
             </ul>
         </nav>

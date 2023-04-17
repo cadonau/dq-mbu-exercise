@@ -6,6 +6,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import LunchMenu from "./pages/LunchMenu";
 import Login from "./pages/Login";
 import RequireAuth from "./components/RequireAuth";
+import LunchRegistration from "./pages/LunchRegistration";
 
 function App() {
 
@@ -26,6 +27,10 @@ function App() {
           path: "/lunch-menu",
           element: <LunchMenu />
         },
+        {
+          path: "/lunch-registration",
+          element: <LunchRegistration />
+        }
       ]
     },
     {

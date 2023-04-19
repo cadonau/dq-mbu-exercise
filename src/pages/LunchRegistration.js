@@ -1,10 +1,15 @@
 import {useEffect, useState} from "react";
 import MainNavigation from "../components/MainNavigation";
 
-function PersonFieldset({formData, onChange, personOptions = []}) {
+function PersonFieldset({formData, onChange, personOptions = [], isActive = true}) {
 
     // (cf. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
     const {person} = formData;
+
+    // cf. https://react.dev/learn/conditional-rendering#conditionally-returning-nothing-with-null
+    if (!isActive) {
+        return null;
+    }
 
     return <fieldset>
         <label htmlFor="person" className="form-label">Person:</label>
@@ -20,9 +25,13 @@ function PersonFieldset({formData, onChange, personOptions = []}) {
     </fieldset>;
 }
 
-function DateTimeFieldset({formData, onChange}) {
+function DateTimeFieldset({formData, onChange, isActive = true}) {
 
     const {date, time} = formData;
+
+    if (!isActive) {
+        return null;
+    }
 
     return <fieldset>
         <label htmlFor="date" className="form-label">Datum:</label>
@@ -42,9 +51,13 @@ function DateTimeFieldset({formData, onChange}) {
     </fieldset>;
 }
 
-function OfferFieldset({formData, onChange}) {
+function OfferFieldset({formData, onChange, isActive = true}) {
 
     const {lunchType} = formData;
+
+    if (!isActive) {
+        return null;
+    }
 
     return <fieldset>
         <legend>Angebot/Menü:</legend>
@@ -253,15 +266,10 @@ export default function LunchRegistration() {
             {/*cf. https://getbootstrap.com/docs/5.2/forms/overview/*/}
             <form onSubmit={handleSubmit} className="container">
                 {/* cf. https://react.dev/learn/conditional-rendering */}
-                {currentStep === 0 &&
-                    <PersonFieldset formData={formData} onChange={handleChange} personOptions={personOptions}/>
-                }
-                {currentStep === 1 &&
-                    <DateTimeFieldset formData={formData} onChange={handleChange}/>
-                }
-                {currentStep === 2 &&
-                    <OfferFieldset formData={formData} onChange={handleChange}/>
-                }
+                {/* (~ cf. https://react.dev/learn/sharing-state-between-components#step-3-add-state-to-the-common-parent) */}
+                <PersonFieldset formData={formData} onChange={handleChange} personOptions={personOptions} isActive={currentStep === 0}/>
+                <DateTimeFieldset formData={formData} onChange={handleChange} isActive={currentStep === 1}/>
+                <OfferFieldset formData={formData} onChange={handleChange} isActive={currentStep === 2}/>
                 {0 < currentStep &&
                     <input type="button" className="btn btn-outline-primary" value="Zurück" onClick={handlePrev}/>
                 }

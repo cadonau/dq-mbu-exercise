@@ -75,6 +75,14 @@ function OfferFieldset({formData, onChange}) {
     </fieldset>;
 }
 
+// cf. https://react.dev/learn/sharing-state-between-components#step-3-add-state-to-the-common-parent
+function Step({isCurrent, children}) {
+    if (!isCurrent) {
+        return null;
+    }
+    return children;
+}
+
 export default function LunchRegistration() {
 
     const authToken = localStorage.getItem("auth") ?? null;
@@ -252,16 +260,15 @@ export default function LunchRegistration() {
 
             {/*cf. https://getbootstrap.com/docs/5.2/forms/overview/*/}
             <form onSubmit={handleSubmit} className="container">
-                {/* cf. https://react.dev/learn/conditional-rendering */}
-                {currentStep === 0 &&
+                <Step isCurrent={currentStep === 0}>
                     <PersonFieldset formData={formData} onChange={handleChange} personOptions={personOptions}/>
-                }
-                {currentStep === 1 &&
+                </Step>
+                <Step isCurrent={currentStep === 1}>
                     <DateTimeFieldset formData={formData} onChange={handleChange}/>
-                }
-                {currentStep === 2 &&
+                </Step>
+                <Step isCurrent={currentStep === 2}>
                     <OfferFieldset formData={formData} onChange={handleChange}/>
-                }
+                </Step>
                 {0 < currentStep &&
                     <input type="button" className="btn btn-outline-primary" value="Zurück" onClick={handlePrev}/>
                 }

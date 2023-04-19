@@ -1,10 +1,56 @@
 import {useEffect, useState} from "react";
 import MainNavigation from "../components/MainNavigation";
 
-function PersonFieldset({formData, onChange, personOptions = [], isActive = true}) {
+function PersonFieldset({formData, onChange, isActive = true}) {
 
     // (cf. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
     const {person} = formData;
+
+    const [personOptions, setPersonOptions] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const authToken = localStorage.getItem("auth") ?? null;
+
+    useEffect(() => {
+
+        // see returned cleanup function below
+        const controller = new AbortController();
+
+        // cf. https://ultimatecourses.com/blog/using-async-await-inside-react-use-effect-hook
+        (async () => {
+            try {
+                // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/pers?query="Inaktiv=false"&limit=0&attributes=PersNr,Name,Vorname,VornameName,NameVorname`, {
+                    signal: controller.signal,
+                    headers: {
+                        Authorization: `Bearer ${authToken}`
+                    }
+                });
+                if (!response.ok) {
+                    setErrorMessage("Fehler beim Laden der Personenliste: " + response.statusText);
+                    return;
+                }
+                const responseObject = await response.json();
+                console.log(responseObject);
+                setPersonOptions(responseObject.data);
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    console.log("Fetch request successfully aborted.");
+                } else {
+                    console.error(error);
+                    setErrorMessage("Unerwarteter Fehler beim Laden der Personenliste.");
+                }
+            }
+        })();
+
+        // cf. https://react.dev/reference/react/useEffect
+        // cf. https://blog.logrocket.com/understanding-react-useeffect-cleanup-function/
+        return () => {
+            controller.abort();
+        };
+
+    }, [authToken]);
+
 
     // cf. https://react.dev/learn/conditional-rendering#conditionally-returning-nothing-with-null
     if (!isActive) {
@@ -22,6 +68,9 @@ function PersonFieldset({formData, onChange, personOptions = [], isActive = true
                 <option key={PersNr} value={PersNr}>{NameVorname}</option>
             )}
         </select>
+        {errorMessage &&
+            <p className="text-danger">{errorMessage}</p>
+        }
     </fieldset>;
 }
 
@@ -103,7 +152,6 @@ export default function LunchRegistration() {
     };
 
     const [formData, setFormData] = useState(initialFormData);
-    const [personOptions, setPersonOptions] = useState([]);
 
     const [status, setStatus] = useState({
         message: "",
@@ -112,53 +160,6 @@ export default function LunchRegistration() {
 
     const TOTAL_STEPS = 3;
     const [currentStep, setCurrentStep] = useState(0);
-
-    useEffect(() => {
-
-        // see returned cleanup function below
-        const controller = new AbortController();
-
-        // cf. https://ultimatecourses.com/blog/using-async-await-inside-react-use-effect-hook
-        (async () => {
-            try {
-                // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/pers?query="Inaktiv=false"&limit=0&attributes=PersNr,Name,Vorname,VornameName,NameVorname`, {
-                    signal: controller.signal,
-                    headers: {
-                        Authorization: `Bearer ${authToken}`
-                    }
-                });
-                if (!response.ok) {
-                    setStatus({
-                        message: "Fehler beim Laden der Personenliste: " + response.statusText,
-                        type: "error"
-                    });
-                    return;
-                }
-                const responseObject = await response.json();
-                console.log(responseObject);
-                setPersonOptions(responseObject.data);
-            } catch (error) {
-                if (error.name === "AbortError") {
-                    console.log("Fetch request successfully aborted.");
-                } else {
-                    console.error(error);
-                    setStatus({
-                        message: "Unerwarteter Fehler beim Laden der Personenliste.",
-                        type: "error"
-                    });
-                }
-            }
-        })();
-
-        // cf. https://react.dev/reference/react/useEffect
-        // cf. https://blog.logrocket.com/understanding-react-useeffect-cleanup-function/
-        return () => {
-            controller.abort();
-        };
-
-    }, [authToken]);
-
 
     function handleChange(event) {
         const value = event.target.value;
@@ -267,7 +268,7 @@ export default function LunchRegistration() {
             <form onSubmit={handleSubmit} className="container">
                 {/* cf. https://react.dev/learn/conditional-rendering */}
                 {/* (~ cf. https://react.dev/learn/sharing-state-between-components#step-3-add-state-to-the-common-parent) */}
-                <PersonFieldset formData={formData} onChange={handleChange} personOptions={personOptions} isActive={currentStep === 0}/>
+                <PersonFieldset formData={formData} onChange={handleChange} isActive={currentStep === 0}/>
                 <DateTimeFieldset formData={formData} onChange={handleChange} isActive={currentStep === 1}/>
                 <OfferFieldset formData={formData} onChange={handleChange} isActive={currentStep === 2}/>
                 {0 < currentStep &&

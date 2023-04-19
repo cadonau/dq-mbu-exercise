@@ -1,6 +1,64 @@
 import {useEffect, useState} from "react";
 import MainNavigation from "../components/MainNavigation";
 
+function PersonFieldset({formData, onChange, personOptions = []}) {
+    return <fieldset>
+        <label htmlFor="person" className="form-label">Person:</label>
+        <select id="person" name="person" value={formData.person} onChange={onChange}
+                required
+                className="form-select">
+            <option value="">Person auswählen</option>
+
+            {personOptions.map(({PersNr, NameVorname}) =>
+                <option key={PersNr} value={PersNr}>{NameVorname}</option>
+            )}
+        </select>
+    </fieldset>;
+}
+
+function DateTimeFieldset({formData, onChange}) {
+    return <fieldset>
+        <label htmlFor="date" className="form-label">Datum:</label>
+        <input id="date" name="date" type="date" value={formData.date} onChange={onChange}
+               required
+               className="form-control"/>
+        <label htmlFor="time" className="form-label">Zeit:</label>
+        <input id="time" name="time" type="time" value={formData.time} onChange={onChange}
+               min="12:00"
+               max="13:00"
+               step="3600"
+               required
+               className="form-control"/>
+    </fieldset>;
+}
+
+function OfferFieldset({formData, onChange}) {
+    return <fieldset>
+        <legend>Angebot/Menü:</legend>
+        <div className="form-check">
+            <input id="vegetarian" name="lunchType" type="radio" value="vegetarian"
+                   checked={formData.lunchType === "vegetarian"} onChange={onChange}
+                   className="form-check-input"
+                   required/>
+            <label htmlFor="vegetarian" className="form-check-label">Vegetarisch</label>
+        </div>
+        <div className="form-check">
+            <input id="meat" name="lunchType" type="radio" value="meat"
+                   checked={formData.lunchType === "meat"} onChange={onChange}
+                   className="form-check-input"
+                   required/>
+            <label htmlFor="meat" className="form-check-label">Fleisch</label>
+        </div>
+        <div className="form-check">
+            <input id="salad-only" name="lunchType" type="radio" value="salad-only"
+                   checked={formData.lunchType === "salad-only"} onChange={onChange}
+                   className="form-check-input"
+                   required/>
+            <label htmlFor="salad-only" className="form-check-label">Nur Salat</label>
+        </div>
+    </fieldset>;
+}
+
 export default function LunchRegistration() {
 
     const authToken = localStorage.getItem("auth") ?? null;
@@ -180,58 +238,13 @@ export default function LunchRegistration() {
             <form onSubmit={handleSubmit} className="container">
                 {/* cf. https://react.dev/learn/conditional-rendering */}
                 {currentStep === 0 &&
-                    <fieldset>
-                        <label htmlFor="person" className="form-label">Person:</label>
-                        <select id="person" name="person" value={formData.person} onChange={handleChange}
-                                required
-                                className="form-select">
-                            <option value="">Person auswählen</option>
-                            {personOptions.map(({PersNr, NameVorname}) =>
-                                <option key={PersNr} value={PersNr}>{NameVorname}</option>
-                            )}
-                        </select>
-                    </fieldset>
+                    <PersonFieldset formData={formData} onChange={handleChange} personOptions={personOptions}/>
                 }
                 {currentStep === 1 &&
-                    <fieldset>
-                        <label htmlFor="date" className="form-label">Datum:</label>
-                        <input id="date" name="date" type="date" value={formData.date} onChange={handleChange}
-                               required
-                               className="form-control"/>
-                        <label htmlFor="time" className="form-label">Zeit:</label>
-                        <input id="time" name="time" type="time" value={formData.time} onChange={handleChange}
-                               min="12:00"
-                               max="13:00"
-                               step="3600"
-                               required
-                               className="form-control"/>
-                    </fieldset>
+                    <DateTimeFieldset formData={formData} onChange={handleChange}/>
                 }
                 {currentStep === 2 &&
-                    <fieldset>
-                        <legend>Angebot/Menü:</legend>
-                        <div className="form-check">
-                            <input id="vegetarian" name="lunchType" type="radio" value="vegetarian"
-                                   checked={formData.lunchType === "vegetarian"} onChange={handleChange}
-                                   className="form-check-input"
-                                   required/>
-                            <label htmlFor="vegetarian" className="form-check-label">Vegetarisch</label>
-                        </div>
-                        <div className="form-check">
-                            <input id="meat" name="lunchType" type="radio" value="meat"
-                                   checked={formData.lunchType === "meat"} onChange={handleChange}
-                                   className="form-check-input"
-                                   required/>
-                            <label htmlFor="meat" className="form-check-label">Fleisch</label>
-                        </div>
-                        <div className="form-check">
-                            <input id="salad-only" name="lunchType" type="radio" value="salad-only"
-                                   checked={formData.lunchType === "salad-only"} onChange={handleChange}
-                                   className="form-check-input"
-                                   required/>
-                            <label htmlFor="salad-only" className="form-check-label">Nur Salat</label>
-                        </div>
-                    </fieldset>
+                    <OfferFieldset formData={formData} onChange={handleChange}/>
                 }
                 {0 < currentStep &&
                     <input type="button" className="btn btn-outline-primary" value="Zurück" onClick={handlePrev}/>

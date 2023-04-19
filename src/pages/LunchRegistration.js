@@ -134,10 +134,46 @@ export default function LunchRegistration() {
             {/*cf. https://getbootstrap.com/docs/5.2/forms/overview/*/}
             <form onSubmit={handleSubmit} className="container">
                 {/* cf. https://react.dev/learn/conditional-rendering */}
-                {/* (~ cf. https://react.dev/learn/sharing-state-between-components#step-3-add-state-to-the-common-parent) */}
+                {/* (cf. https://react.dev/learn/sharing-state-between-components#step-3-add-state-to-the-common-parent) */}
                 <PersonFieldset formData={formData} onChange={handleChange} isActive={currentStep === 0}/>
                 <DateTimeFieldset formData={formData} onChange={handleChange} isActive={currentStep === 1}/>
                 <OfferFieldset formData={formData} onChange={handleChange} isActive={currentStep === 2}/>
+
+                {/*
+// Assuming we had the following function component (separately) …
+
+function Step({isActive, children}) {
+    if (!isActive) {
+        return null;
+    }
+    // cf. https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children
+    return children;
+}
+
+// … we could also nest the fieldset components here …
+
+                <Step isActive={currentStep === 0}>
+                    <PersonFieldset formData={formData} onChange={handleChange}/>
+                </Step>
+                <Step isActive={currentStep === 1}>
+                    <DateTimeFieldset formData={formData} onChange={handleChange}/>
+                </Step>
+                <Step isActive={currentStep === 2}>
+                    <OfferFieldset formData={formData} onChange={handleChange}/>
+                </Step>
+
+// … BUT the PersonFieldset would call the API each time it gets re-added to the DOM,
+// i.e. when stepping back to it, as it and esp. its state gets deleted when advancing,
+// cf. https://react.dev/learn/preserving-and-resetting-state#state-is-tied-to-a-position-in-the-tree.
+
+// If the personOptions state was handled within LunchRegistration (here) and passed down, we could improve it:
+
+                <Step isActive={currentStep === 0}>
+                    <PersonFieldset formData={formData} onChange={handleChange} personOptions={personOptions}/>
+                </Step>
+
+                 */}
+
                 {0 < currentStep &&
                     <input type="button" className="btn btn-outline-primary" value="Zurück" onClick={handlePrev}/>
                 }

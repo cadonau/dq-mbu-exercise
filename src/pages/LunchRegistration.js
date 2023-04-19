@@ -2,9 +2,13 @@ import {useEffect, useState} from "react";
 import MainNavigation from "../components/MainNavigation";
 
 function PersonFieldset({formData, onChange, personOptions = []}) {
+
+    // (cf. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+    const {person} = formData;
+
     return <fieldset>
         <label htmlFor="person" className="form-label">Person:</label>
-        <select id="person" name="person" value={formData.person} onChange={onChange}
+        <select id="person" name="person" value={person} onChange={onChange}
                 required
                 className="form-select">
             <option value="">Person auswählen</option>
@@ -17,13 +21,16 @@ function PersonFieldset({formData, onChange, personOptions = []}) {
 }
 
 function DateTimeFieldset({formData, onChange}) {
+
+    const {date, time} = formData;
+
     return <fieldset>
         <label htmlFor="date" className="form-label">Datum:</label>
-        <input id="date" name="date" type="date" value={formData.date} onChange={onChange}
+        <input id="date" name="date" type="date" value={date} onChange={onChange}
                required
                className="form-control"/>
         <label htmlFor="time" className="form-label">Zeit:</label>
-        <input id="time" name="time" type="time" value={formData.time} onChange={onChange}
+        <input id="time" name="time" type="time" value={time} onChange={onChange}
                min="12:00"
                max="13:00"
                step="3600"
@@ -33,25 +40,28 @@ function DateTimeFieldset({formData, onChange}) {
 }
 
 function OfferFieldset({formData, onChange}) {
+
+    const {lunchType} = formData;
+
     return <fieldset>
         <legend>Angebot/Menü:</legend>
         <div className="form-check">
             <input id="vegetarian" name="lunchType" type="radio" value="vegetarian"
-                   checked={formData.lunchType === "vegetarian"} onChange={onChange}
+                   checked={lunchType === "vegetarian"} onChange={onChange}
                    className="form-check-input"
                    required/>
             <label htmlFor="vegetarian" className="form-check-label">Vegetarisch</label>
         </div>
         <div className="form-check">
             <input id="meat" name="lunchType" type="radio" value="meat"
-                   checked={formData.lunchType === "meat"} onChange={onChange}
+                   checked={lunchType === "meat"} onChange={onChange}
                    className="form-check-input"
                    required/>
             <label htmlFor="meat" className="form-check-label">Fleisch</label>
         </div>
         <div className="form-check">
             <input id="salad-only" name="lunchType" type="radio" value="salad-only"
-                   checked={formData.lunchType === "salad-only"} onChange={onChange}
+                   checked={lunchType === "salad-only"} onChange={onChange}
                    className="form-check-input"
                    required/>
             <label htmlFor="salad-only" className="form-check-label">Nur Salat</label>

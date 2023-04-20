@@ -69,8 +69,9 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
                 <option key={PersNr} value={PersNr}>{NameVorname}</option>
             )}
         </select>
+        {/* cf. https://www.w3.org/WAI/tutorials/forms/notifications/ */}
         {errorMessage &&
-            <p className="text-danger">{errorMessage}</p>
+            <p role="alert" className="text-danger">{errorMessage}</p>
         }
     </fieldset>;
 }

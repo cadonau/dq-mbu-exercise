@@ -131,6 +131,15 @@ export default function LunchRegistration() {
             </header>
             <h1 className="container">Anmeldung für Mittagsmenü</h1>
 
+            {/* cf. https://www.w3.org/WAI/tutorials/forms/notifications/ */}
+            {/* cf. https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions#roles_with_implicit_live_region_attributes */}
+            {status && status.message &&
+                <div role={status.type === "error" ? "alert" : "status"}
+                     className={status.type === "error" ? "text-danger" : status.type === "success" ? "text-success" : null}>
+                    {status.message}
+                </div>
+            }
+
             {/*cf. https://getbootstrap.com/docs/5.2/forms/overview/*/}
             <form onSubmit={handleSubmit} className="container">
                 {/* cf. https://react.dev/learn/conditional-rendering */}
@@ -180,10 +189,6 @@ function Step({isActive, children}) {
                 <input type="submit" className="btn btn-primary"
                        value={currentStep < TOTAL_STEPS - 1 ? "Weiter" : "Übermitteln"}/>
             </form>
-            <div
-                className={`container ${status.type === "error" ? "text-danger" : null} ${status.type === "success" ? "text-success" : null}`}>
-                {status.message}
-            </div>
         </div>
     );
 }

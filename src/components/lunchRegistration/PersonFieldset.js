@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 
 export default function PersonFieldset({formData, onChange, isActive = true}) {
 
@@ -9,6 +10,8 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
     const [errorMessage, setErrorMessage] = useState("");
 
     const authToken = localStorage.getItem("auth") ?? null;
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
 
@@ -27,6 +30,19 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
                 });
                 if (!response.ok) {
                     setErrorMessage("Fehler beim Laden der Personenliste: " + response.statusText);
+
+                    // if "Unauthorized"
+                    // cf. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+                    if (response.status === 401) {
+                        localStorage.removeItem("auth");
+                        navigate("/login", {
+                            state: {
+                                from: location
+                            },
+                            replace: true
+                        });
+                    }
+
                     return;
                 }
                 const responseObject = await response.json();
@@ -48,7 +64,7 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
             controller.abort();
         };
 
-    }, [authToken]);
+    }, [authToken, location, navigate]);
 
 
     // cf. https://react.dev/learn/conditional-rendering#conditionally-returning-nothing-with-null

@@ -3,10 +3,13 @@ import MainNavigation from "../components/MainNavigation";
 import PersonFieldset from "../components/lunchRegistration/PersonFieldset";
 import DateTimeFieldset from "../components/lunchRegistration/DateTimeFieldset";
 import OfferFieldset from "../components/lunchRegistration/OfferFieldset";
+import {useLocation, useNavigate} from "react-router-dom";
 
 export default function LunchRegistration() {
 
     const authToken = localStorage.getItem("auth") ?? null;
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const currentDateTimeISO = new Date().toISOString();
     const defaultDate = currentDateTimeISO.split("T")[0];
@@ -104,6 +107,19 @@ export default function LunchRegistration() {
                             message: "Fehler beim Übermittlungs-Versuch: " + response.statusText,
                             type: "error"
                         });
+
+                        // if "Unauthorized"
+                        // cf. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+                        if (response.status === 401) {
+                            localStorage.removeItem("auth");
+                            navigate("/login", {
+                                state: {
+                                    from: location
+                                },
+                                replace: true
+                            });
+                        }
+
                         return;
                     }
                     const responseObject = await response.json();

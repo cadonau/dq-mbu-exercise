@@ -6,7 +6,10 @@ export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [status, setStatus] = useState({
+        message: "",
+        type: ""
+    });
 
     const navigate = useNavigate();
 
@@ -29,6 +32,10 @@ export default function Login() {
         event.preventDefault();
         // cf. https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#uploading_json_data
         try {
+            setStatus({
+                message: "Daten werden übermittelt …",
+                type: "fetching"
+            });
             // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
             const response = await fetch(`${process.env.REACT_APP_API_URL}/authentication/login`, {
                 method: "POST",
@@ -46,37 +53,56 @@ export default function Login() {
             if (data && data.authToken) {
                 // cf. https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
                 localStorage.setItem("auth", data?.authToken);
-                setErrorMessage("");
+                setStatus({
+                    message: "",
+                    type: ""
+                });
                 navigate(from, {replace: true});
             } else {
-                setErrorMessage("Fehler beim Login-Versuch: " + data.message);
+                setStatus({
+                    message: "Fehler beim Login-Versuch: " + data.message,
+                    type: "error"
+                });
             }
         } catch (error) {
             console.error(error);
-            setErrorMessage("Unerwarteter Fehler beim Login-Versuch.");
+            setStatus({
+                message: "Unerwarteter Fehler beim Login-Versuch.",
+                type: "error"
+            });
         }
     }
 
     return (
         <>
+            {status && status.message &&
+                <div role={status.type === "error" ? "alert" : "status"}
+                     className={`container ${status.type === "error" ? "text-danger" : status.type === "success" ? "text-success" : undefined}`}>
+                    {status.message}
+                </div>
+            }
             {/*cf. https://getbootstrap.com/docs/5.2/forms/overview/*/}
             {/* cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete */}
             <form onSubmit={handleSubmit} className="container">
-                <label htmlFor="username" className="form-label">Username</label>
+                <label htmlFor="username" className="form-label">Benutzername:</label>
                 <input id="username" name="username" type="text" value={username} onChange={handleUsernameChange}
                        required
                        autoComplete="username"
                        className="form-control"/>
-                <label htmlFor="password" className="form-label">Password</label>
-                <input id="password" name="password" type="password" value={password} onChange={handlePasswordChange}
+                <label htmlFor="password" className="form-label">Passwort:</label>
+                <input id="password" name="password" type="password" value={password}
+                       onChange={handlePasswordChange}
                        required
                        autoComplete="current-password"
                        className="form-control"/>
-                <input type="submit" className="btn btn-primary"/>
+                <button type="submit" className="btn btn-primary"
+                        disabled={status && status.type === "fetching"}>
+                    {status && status.type === "fetching" &&
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    }
+                    Anmelden
+                </button>
             </form>
-            <div className="container text-danger">
-                {errorMessage}
-            </div>
         </>
     );
 }

@@ -7,7 +7,10 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
     const {person} = formData;
 
     const [personOptions, setPersonOptions] = useState([]);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [status, setStatus] = useState({
+        message: "",
+        type: ""
+    });
 
     const authToken = localStorage.getItem("auth") ?? null;
     const navigate = useNavigate();
@@ -21,6 +24,10 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
         // cf. https://ultimatecourses.com/blog/using-async-await-inside-react-use-effect-hook
         (async () => {
             try {
+                setStatus({
+                    message: "Daten werden geladen …",
+                    type: "fetching"
+                });
                 // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/pers?query="Inaktiv=false"&limit=0&attributes=PersNr,Name,Vorname,VornameName,NameVorname`, {
                     signal: controller.signal,
@@ -29,7 +36,10 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
                     }
                 });
                 if (!response.ok) {
-                    setErrorMessage("Fehler beim Laden der Personenliste: " + response.statusText);
+                    setStatus({
+                        message: "Fehler beim Laden der Personenliste: " + response.statusText,
+                        type: "error"
+                    });
 
                     // if "Unauthorized"
                     // cf. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
@@ -48,12 +58,19 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
                 const responseObject = await response.json();
                 console.log(responseObject);
                 setPersonOptions(responseObject.data);
+                setStatus({
+                    message: "",
+                    type: ""
+                });
             } catch (error) {
                 if (error.name === "AbortError") {
                     console.log("Fetch request successfully aborted.");
                 } else {
                     console.error(error);
-                    setErrorMessage("Unerwarteter Fehler beim Laden der Personenliste.");
+                    setStatus({
+                        message: "Unerwarteter Fehler beim Laden der Personenliste.",
+                        type: "error"
+                    });
                 }
             }
         })();
@@ -72,22 +89,32 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
         return null;
     }
 
-    return <fieldset>
-        <label htmlFor="person" className="form-label">Person:
-            <span aria-hidden="true">*</span>
-        </label>
-        <select id="person" name="person" value={person} onChange={onChange}
-                required
-                className="form-select">
-            <option value="">Person auswählen</option>
+    return (
+        <fieldset>
+            <label htmlFor="person" className="form-label">Person:
+                <span aria-hidden="true">*</span>
+            </label>
+            {status && status.message ?
+                // cf. https://www.w3.org/WAI/tutorials/forms/notifications/
+                <div role={status.type === "error" ? "alert" : "status"}
+                     className={
+                         status.type === "error" ? "text-danger" :
+                             status.type === "success" ? "text-success" :
+                                 status.type === "fetching" ? "spinner-border d-block" :
+                                     undefined}>
+                    <span className={status.type === "fetching" ? "visually-hidden" : undefined}>{status.message}</span>
+                </div>
+                :
+                <select id="person" name="person" value={person} onChange={onChange}
+                        required
+                        className="form-select">
+                    <option value="">Person auswählen</option>
 
-            {personOptions.map(({PersNr, NameVorname}) =>
-                <option key={PersNr} value={PersNr}>{NameVorname}</option>
-            )}
-        </select>
-        {/* cf. https://www.w3.org/WAI/tutorials/forms/notifications/ */}
-        {errorMessage &&
-            <p role="alert" className="text-danger">{errorMessage}</p>
-        }
-    </fieldset>;
+                    {personOptions.map(({PersNr, NameVorname}) =>
+                        <option key={PersNr} value={PersNr}>{NameVorname}</option>
+                    )}
+                </select>
+            }
+        </fieldset>
+    );
 }

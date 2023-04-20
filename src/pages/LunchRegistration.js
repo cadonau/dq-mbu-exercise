@@ -90,6 +90,10 @@ export default function LunchRegistration() {
             } else {
                 // cf. https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#uploading_json_data
                 try {
+                    setStatus({
+                        message: "Daten werden übermittelt …",
+                        type: "fetching"
+                    });
                     // cf. https://create-react-app.dev/docs/adding-custom-environment-variables/
                     const response = await fetch(`${process.env.REACT_APP_API_URL}/dqdata`, {
                         method: "POST",
@@ -151,7 +155,7 @@ export default function LunchRegistration() {
             {/* cf. https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions#roles_with_implicit_live_region_attributes */}
             {status && status.message &&
                 <div role={status.type === "error" ? "alert" : "status"}
-                     className={status.type === "error" ? "text-danger" : status.type === "success" ? "text-success" : null}>
+                     className={`container ${status.type === "error" ? "text-danger" : status.type === "success" ? "text-success" : undefined}`}>
                     {status.message}
                 </div>
             }
@@ -202,12 +206,17 @@ function Step({isActive, children}) {
                 {0 < currentStep &&
                     <input type="button" className="btn btn-outline-primary" value="Zurück" onClick={handlePrev}/>
                 }
-                <input type="submit" className="btn btn-primary"
-                       value={currentStep < TOTAL_STEPS - 1 ? "Weiter" : "Übermitteln"}/>
+                <button type="submit" className="btn btn-primary"
+                        disabled={status && status.type === "fetching"}>
+                    {status && status.type === "fetching" &&
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    }
+                    {currentStep < TOTAL_STEPS - 1 ? "Weiter" : "Übermitteln"}
+                </button>
                 <div>
                     {/* Use semantic progress element: */}
                     {/* cf. https://www.w3.org/WAI/tutorials/forms/multi-page/ */}
-                    Formularfortschritt:<br />
+                    Formularfortschritt:<br/>
                     <progress max={TOTAL_STEPS} value={currentStep}>Schritt {currentStep} von {TOTAL_STEPS})</progress>
                 </div>
                 {/* Use Bootstrap alternative and add semantic meaning with ARIA attributes:

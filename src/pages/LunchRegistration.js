@@ -26,9 +26,12 @@ function DateTimeFieldset({formData, onChange}) {
 
     return <fieldset>
         <label htmlFor="date" className="form-label">Datum:</label>
+        {/* Autofocus is problematic! */}
+        {/* cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/autofocus */}
         <input id="date" name="date" type="date" value={date} onChange={onChange}
                required
-               className="form-control"/>
+               className="form-control"
+               autoFocus="autofocus"/>
         <label htmlFor="time" className="form-label">Zeit:</label>
         <input id="time" name="time" type="time" value={time} onChange={onChange}
                min="12:00"
@@ -46,10 +49,13 @@ function OfferFieldset({formData, onChange}) {
     return <fieldset>
         <legend>Angebot/Menü:</legend>
         <div className="form-check">
+            {/* Autofocus is problematic! */}
+            {/* cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/autofocus */}
             <input id="vegetarian" name="lunchType" type="radio" value="vegetarian"
                    checked={lunchType === "vegetarian"} onChange={onChange}
                    className="form-check-input"
-                   required/>
+                   required
+                   autoFocus="autofocus"/>
             <label htmlFor="vegetarian" className="form-check-label">Vegetarisch</label>
         </div>
         <div className="form-check">

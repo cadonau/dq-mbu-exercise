@@ -188,6 +188,21 @@ function Step({isActive, children}) {
                 }
                 <input type="submit" className="btn btn-primary"
                        value={currentStep < TOTAL_STEPS - 1 ? "Weiter" : "Übermitteln"}/>
+                <div>
+                    {/* Use semantic progress element: */}
+                    {/* cf. https://www.w3.org/WAI/tutorials/forms/multi-page/ */}
+                    Formularfortschritt:<br />
+                    <progress max={TOTAL_STEPS} value={currentStep}>Schritt {currentStep} von {TOTAL_STEPS})</progress>
+                </div>
+                {/* Use Bootstrap alternative and add semantic meaning with ARIA attributes:
+                <div className="progress">
+                    <div className="progress-bar"
+                         role="progressbar" aria-label={`Formular Schritt ${currentStep} von ${TOTAL_STEPS}`}
+                         aria-valuenow={currentStep} aria-valuemin="0" aria-valuemax={TOTAL_STEPS}
+                         style={{width: (currentStep / TOTAL_STEPS * 100) + "%"}}
+                    ></div>
+                </div>
+                */}
             </form>
         </div>
     );

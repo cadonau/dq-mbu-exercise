@@ -7,7 +7,9 @@ export default function OfferFieldset({formData, onChange, isActive = true}) {
     }
 
     return <fieldset>
-        <legend>Angebot/Menü:</legend>
+        <legend>Angebot/Menü:
+            <span aria-hidden="true">*</span>
+        </legend>
         <div className="form-check">
             {/* Autofocus is problematic! */}
             {/* cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/autofocus */}

@@ -57,7 +57,9 @@ export default function PersonFieldset({formData, onChange, isActive = true}) {
     }
 
     return <fieldset>
-        <label htmlFor="person" className="form-label">Person:</label>
+        <label htmlFor="person" className="form-label">Person:
+            <span aria-hidden="true">*</span>
+        </label>
         <select id="person" name="person" value={person} onChange={onChange}
                 required
                 className="form-select">

@@ -60,14 +60,17 @@ export default function Login() {
     return (
         <>
             {/*cf. https://getbootstrap.com/docs/5.2/forms/overview/*/}
+            {/* cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete */}
             <form onSubmit={handleSubmit} className="container">
                 <label htmlFor="username" className="form-label">Username</label>
                 <input id="username" name="username" type="text" value={username} onChange={handleUsernameChange}
                        required
+                       autoComplete="username"
                        className="form-control"/>
                 <label htmlFor="password" className="form-label">Password</label>
                 <input id="password" name="password" type="password" value={password} onChange={handlePasswordChange}
                        required
+                       autoComplete="current-password"
                        className="form-control"/>
                 <input type="submit" className="btn btn-primary"/>
             </form>
